@@ -1,6 +1,9 @@
-#include "Nmer.h"
-
 #include <fstream>
+#include <string>
+using namespace std;
+
+#include "ktree.h"
+#include "Nmer.h"
 
 template<typename T, int K>
 extern void recorrido_preorden(typename ktree<T,K>::const_node n);
@@ -28,7 +31,7 @@ bool Nmer::loadSerialized(const string & fichero) {
       getline(fe,cadena,'\n'); 
     } while (cadena.find("#")==0 && !fe.eof());
     // leemos Nmer_length
-     max_long = std::stoi(cadena);
+     max_long = stoi(cadena);
      // leemos cadena serializada
     getline(fe,cadena,'\n');
     el_Nmer.deserialize(cadena,nulo,';',stb); 
@@ -45,18 +48,51 @@ void Nmer::list_Nmer() const {
 }
  
 unsigned int Nmer::length() const {
-	return max_long;
+   return max_long;
 }
  
 Nmer::size_type Nmer::size() const{
-	return el_Nmer.size()-1;
+  return el_Nmer.size()-1;
 }
 
-void Nmer::sequenceADN(unsigned int tama, const string & adn) {
-	ktree::node n = "-";
-	ktree::assing(el_Nmer, n);
+void Nmer::sequenceADN(unsigned int tama, const string & adn ) {
+	string cadena;
+	for ( int i = 0 ; i < adn.size() - tama; i++) {
+		for (int j = i; j <= tama; j++) {
+			cadena += adn[j];
+		}
+		insertar_cadena(cadena);
+		cadena.clear();
+	}
+}
 
-	el_Nmer.insert_k_child ( n, 0, "A");
+void Nmer::insertar_cadena(const string cadena) {
+	typename ktree<pair<char,int>,4>::node n_act = el_Nmer.root();
+	int indice;
+	pair<char,int> par;
+	for (int i = 0; i < cadena.size(); i++) {
+		indice = indice_nodo(cadena[i]);
+		if (!n_act.k_child(indice).null()) // Ya esta insertado el nodo
+			(*n_act.k_child(indice)).second++;
+		else {								// No está insertado
+			(*n_act.k_child(indice)).first = cadena[i];
+			(*n_act.k_child(indice)).second = 1;
+		}
+		n_act = n_act.k_child(indice);
+	}	
+}
+
+unsigned int Nmer::indice_nodo(const char car) {
+	if (car == 'A')
+		return 0;
+	if (car == 'G')
+		return 1;
+	if (car == 'C')
+		return 2;
+	if (car == 'T')
+		return 3;
+	else
+		return 50;
 }
 
  

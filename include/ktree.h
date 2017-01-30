@@ -30,9 +30,6 @@
 #ifndef __ktree_H__
 #define __ktree_H__
 
-
-
-
 #include <queue>
 #include <string>
 #include <iostream>
@@ -581,8 +578,8 @@ public:
 
 };
 
-#include "../src/ktree.hpp"
-#include "../src/ktreeNode.hpp"
+#include "../src/ktree.cpp"
+#include "../src/ktreeNode.cpp"
 
 
 #endif

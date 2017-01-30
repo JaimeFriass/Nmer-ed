@@ -8,11 +8,13 @@
  */
 #ifndef __NMER_H
 #define __NMER_H
-
-#include "ktree.h"
 #include <string>
-
 using namespace std;
+#include "ktree.h"
+
+//template <typename T, int K>
+//extern void recorrido_preorden(typename ktree<T,K>::const_node n);
+
 
 class Nmer {
 public:
@@ -47,10 +49,16 @@ public:
   /** @brief Número de Nmers almacenados
    */ 
    size_type size() const;
+  /** @brief Recorre la cadena de ADN para extraer cadenas de longitud tama
+   */ 
+   void sequenceADN(unsigned int tama, const string & adn);
   
 private:
   ktree<pair<char,int>,4> el_Nmer; // subsecuencias 
   unsigned int max_long; // Mayor longitud de la cadena representada, esto es, el nivel máximo del árbol
+
+  void insertar_cadena(string cadena);
+  unsigned int indice_nodo(const char car);
  
   /** @brief Functor para convertir un string en un pair<char,int>
    * se utiliza en loadSerialized
@@ -60,7 +68,7 @@ private:
     pair<char,int> operator()( const string & cad) {
 	    pair<char,int> salida;
 	    salida.first = cad[0];
-	    salida.second = std::stoi(cad.substr(1)); 
+	    salida.second = stoi(cad.substr(1)); 
 	    return salida;
     }
   };

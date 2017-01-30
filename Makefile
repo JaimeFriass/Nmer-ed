@@ -6,11 +6,11 @@ BIN = bin
 CXX = g++ -std=c++11
 AR = ar rvs		
 AR_MACOSX = libtool -static -o  # Para MACs
-CPPFLAGS = -Wall -g  -I$(INC) -c
+CPPFLAGS = -g  -I$(INC) -c
 
 
 
-all: $(BIN)/ejemploKtree
+all: $(BIN)/principal
 
 # ************ Generación de documentación ******************
 documentacion:
@@ -18,11 +18,11 @@ documentacion:
 
 	
 # ************ Compilación de módulos ************
-$(BIN)/ejemploKtree: $(OBJ)/ejemploKtree.o $(LIB)/libNmer.a $(INC)/ktree.h
-	$(CXX) -o $(BIN)/ejemploKtree $(OBJ)/ejemploKtree.o -I$(INC) -L$(LIB) -lNmer
+$(BIN)/principal: $(OBJ)/principal.o $(LIB)/libNmer.a $(INC)/ktree.h
+	$(CXX) -o $(BIN)/principal $(OBJ)/principal.o -I$(INC) -L$(LIB) -lNmer
 
-$(OBJ)/ejemploKtree.o: $(SRC)/ejemploKtree.cpp
-	$(CXX) $(CPPFLAGS)  -o $(OBJ)/ejemploKtree.o $(SRC)/ejemploKtree.cpp 
+$(OBJ)/principal.o: $(SRC)/principal.cpp
+	$(CXX) $(CPPFLAGS)  -o $(OBJ)/principal.o $(SRC)/principal.cpp 
 
 $(LIB)/libNmer.a: $(OBJ)/Nmer.o
 	$(AR) $(LIB)/libNmer.a $(OBJ)/Nmer.o
@@ -32,7 +32,7 @@ $(OBJ)/Nmer.o: $(SRC)/Nmer.cpp $(INC)/Nmer.h
 
 # ************ Limpieza ************
 clean :
-	-rm $(OBJ)/* $(SRC)/*~ $(INC)/*~ ./*~
+	-rm $(OBJ)/*
 
 clean_bin : clean
 	-rm $(BIN)/*
