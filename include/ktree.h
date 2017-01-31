@@ -232,6 +232,7 @@ public:
   */
   template<class String2T>
   void deserialize(const string & ser, const T & valor_nulo, char delim, String2T Str2T);
+  void recorrido_preorden(const_node n);
 
 private:
 

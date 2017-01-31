@@ -5,8 +5,8 @@ using namespace std;
 #include "ktree.h"
 #include "Nmer.h"
 
-template<typename T, int K>
-extern void recorrido_preorden(typename ktree<T,K>::const_node n);
+//template<typename T, int K>
+//extern void recorrido_preorden(typename ktree<T,K>::const_node n);
 
 
 Nmer::Nmer() {
@@ -42,10 +42,10 @@ bool Nmer::loadSerialized(const string & fichero) {
  return false;
 }
  
-void Nmer::list_Nmer() const {
+//void Nmer::list_Nmer() const {
     // implmenentar el recorrido en preorden para el ktree de forma que nos devuelva los Nmers completos y no sólo el nodo.
-      recorrido_preorden<pair<char,int>,4>(el_Nmer.root());
-}
+ //     ktree< pair <char,int> , 4>::recorrido_preorden(el_Nmer.root());
+//}
  
 unsigned int Nmer::length() const {
    return max_long;
@@ -56,12 +56,15 @@ Nmer::size_type Nmer::size() const{
 }
 
 void Nmer::sequenceADN(unsigned int tama, const string & adn ) {
-	string cadena;
-	for ( int i = 0 ; i < adn.size() - tama; i++) {
-		for (int j = i; j <= tama; j++) {
-			cadena += adn[j];
+	cout << "[SEQUENCE ADN] Leyendo cadena: " << adn << endl;
+	string cadena = "";
+	for ( int i = 0 ; i < adn.size() - tama + 1; i++) {
+		for (int j = i; j <= tama + i - 1; j++) {
+			cadena = cadena + adn[j];
 		}
-		insertar_cadena(cadena);
+		cout << "\tCadena: " << cadena << endl;
+		if (cadena.size() == tama)
+			insertar_cadena(cadena);
 		cadena.clear();
 	}
 }
@@ -70,13 +73,19 @@ void Nmer::insertar_cadena(const string cadena) {
 	typename ktree<pair<char,int>,4>::node n_act = el_Nmer.root();
 	int indice;
 	pair<char,int> par;
+	cout << "\t[INSERTAR_CADENA] Insertando cadena " << cadena << endl;
 	for (int i = 0; i < cadena.size(); i++) {
 		indice = indice_nodo(cadena[i]);
-		if (!n_act.k_child(indice).null()) // Ya esta insertado el nodo
+		if (!n_act.k_child(indice).null()) { // Ya esta insertado el nodo
+			cout << "\t\tYa esta insertado el nodo, se incrementa" << endl;
 			(*n_act.k_child(indice)).second++;
+			cout << "\t\tContador = " << (*n_act.k_child(indice)).second << endl;
+		}
 		else {								// No está insertado
-			(*n_act.k_child(indice)).first = cadena[i];
-			(*n_act.k_child(indice)).second = 1;
+			cout << "\t\tNo esta insertado, se inserta " << cadena[i] << endl;
+			par.first = cadena[i];
+			par.second = 1;
+			el_Nmer.insert_k_child( n_act, indice, par);
 		}
 		n_act = n_act.k_child(indice);
 	}	
@@ -94,6 +103,24 @@ unsigned int Nmer::indice_nodo(const char car) {
 	else
 		return 50;
 }
+void Nmer::recorrer_niveles() {
+	typename ktree< pair <char,int>, 4>::const_node n = el_Nmer.root();
+	typename ktree< pair <char,int>, 4>::const_node aux;
+	queue<typename ktree<pair<char,int> ,4>::const_node > cola;
+
+	if (!n.null())
+		cola.push(n);
+
+  	while (!cola.empty()){
+ 		aux = cola.front();
+    	cola.pop();
+		cout << "(" <<  (*aux).first  << " - " << (*aux).second <<"); ";
+    	for (auto hijo : aux)
+      		cola.push(hijo);
+  }
+  cout << endl;
+}
+
 
  
 

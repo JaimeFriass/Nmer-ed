@@ -52,6 +52,8 @@ public:
   /** @brief Recorre la cadena de ADN para extraer cadenas de longitud tama
    */ 
    void sequenceADN(unsigned int tama, const string & adn);
+
+   void recorrer_niveles();
   
 private:
   ktree<pair<char,int>,4> el_Nmer; // subsecuencias 

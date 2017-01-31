@@ -445,4 +445,16 @@ inline typename ktree<T,K>::const_node::child_iterator ktree<T,K>::const_node::c
 
 /*____________________________________________________________ */
 
+template<typename T, int K>
+void ktree<T,K>::recorrido_preorden(typename ktree<T,K>::const_node   n){
 
+if (!n.null()){
+  // cout << "( " << (*n) <<"); " <<endl;
+  typename ktree<T,K>::const_node::child_iterator ini = n.begin();
+  typename ktree<T,K>::const_node::child_iterator fin = n.end();
+  while (ini!=fin){
+     recorrido_preorden(*ini);
+     ++ini;
+   }
+ }
+}
