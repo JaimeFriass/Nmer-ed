@@ -42,10 +42,11 @@ bool Nmer::loadSerialized(const string & fichero) {
  return false;
 }
  
-//void Nmer::list_Nmer() const {
+void Nmer::list_Nmer() const {
     // implmenentar el recorrido en preorden para el ktree de forma que nos devuelva los Nmers completos y no sólo el nodo.
  //     ktree< pair <char,int> , 4>::recorrido_preorden(el_Nmer.root());
-//}
+ 	recorrer_niveles();
+}
  
 unsigned int Nmer::length() const {
    return max_long;
@@ -55,6 +56,9 @@ Nmer::size_type Nmer::size() const{
   return el_Nmer.size()-1;
 }
 
+// -------------------------------------------
+// | 			Métodos pedidos				 |
+// -------------------------------------------
 void Nmer::sequenceADN(unsigned int tama, const string & adn ) {
 	cout << "[SEQUENCE ADN] Leyendo cadena: " << adn << endl;
 	string cadena = "";
@@ -91,6 +95,30 @@ void Nmer::insertar_cadena(const string cadena) {
 	}	
 }
 
+set <pair <string,int>, OrdenCre > rareNmer (int threshold) {
+	set < pair <string,int>, OrdenCre> conjunto;
+	typename ktree<pair <char,int>, 4>::const_node n = el_Nmer.root();
+	typename ktree<pair <char,int>, 4>::const_node aux;
+	queue<typename ktree<pair<char,int> ,4>::const_node > cola;
+	pair <string,int
+
+	if (!n.null())
+		cola.push(n);
+
+  	while (!cola.empty()){
+ 		aux = cola.front();
+    	cola.pop();
+
+		cout << "(" <<  (*aux).first  << " - " << (*aux).second <<"); ";
+    	for (auto hijo : aux)
+      		cola.push(hijo);
+	  }
+}
+
+// -------------------------------------------
+// | 			Métodos auxiliares			 |
+// -------------------------------------------
+
 unsigned int Nmer::indice_nodo(const char car) {
 	if (car == 'A')
 		return 0;
@@ -103,7 +131,7 @@ unsigned int Nmer::indice_nodo(const char car) {
 	else
 		return 50;
 }
-void Nmer::recorrer_niveles() {
+void Nmer::recorrer_niveles() const {
 	typename ktree< pair <char,int>, 4>::const_node n = el_Nmer.root();
 	typename ktree< pair <char,int>, 4>::const_node aux;
 	queue<typename ktree<pair<char,int> ,4>::const_node > cola;

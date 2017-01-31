@@ -9,6 +9,7 @@
 #ifndef __NMER_H
 #define __NMER_H
 #include <string>
+#include <set>
 using namespace std;
 #include "ktree.h"
 
@@ -49,11 +50,22 @@ public:
   /** @brief Número de Nmers almacenados
    */ 
    size_type size() const;
-  /** @brief Recorre la cadena de ADN para extraer cadenas de longitud tama
+  /** @brief Recorre la cadena de ADN para extraer subcadenas de longitud tama e insertarlas en el
+   * Nmer.
+   * @param tama tamaño de las subcadenas del ADN a extraer
+   * @param adn cadena de ADN de la cual extraer subcadenas
    */ 
    void sequenceADN(unsigned int tama, const string & adn);
+  /** @brief Devuelve el conjunto de subcadenas que aparecen un numero de veces.
+   * @param threshold numero de veces que aparecen las subcadenas
+   *
+   * Devuelve el conjunto de subcadenas (no prefijo) que aparecen un número de veces menor o igual
+   * a threshold veces en el Nmer.
+   *
+   */ 
+   // set <pair <string,int>, OrdenCre > rareNmer (int threshold);
 
-   void recorrer_niveles();
+   void recorrer_niveles() const;
   
 private:
   ktree<pair<char,int>,4> el_Nmer; // subsecuencias 
@@ -84,6 +96,13 @@ private:
        string salida = string(1,x.first) + " " +std::to_string(x.second); 
        return salida;
      }
+  };
+
+  class OrdenCre {
+    public:
+    bool operator() ( pair<char,int> par1, pair<char,int> par2) const {
+		return par1.second < par2.second;
+    }
   };
 };
 
