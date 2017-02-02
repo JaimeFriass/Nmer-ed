@@ -50,6 +50,10 @@ public:
   /** @brief Número de Nmers almacenados
    */ 
    size_type size() const;
+  /** @brief Devuelve la altura del nodo argumentado
+   * @param n nodo a calcular su altura
+   */ 
+   int altura_nodo(ktree< pair<char,int>, 4>::const_node n) const;
   /** @brief Recorre la cadena de ADN para extraer subcadenas de longitud tama e insertarlas en el
    * Nmer.
    * @param tama tamaño de las subcadenas del ADN a extraer
@@ -63,7 +67,7 @@ public:
    * a threshold veces en el Nmer.
    *
    */ 
-   // set <pair <string,int>, OrdenCre > rareNmer (int threshold);
+   // set <pair <string,int>, vector<pair <string,int> >,  OrdenCre > rareNmer (int threshold);
 
    void recorrer_niveles() const;
   
@@ -73,6 +77,7 @@ private:
 
   void insertar_cadena(string cadena);
   unsigned int indice_nodo(const char car);
+  set<string> listar(ktree<pair<char,int> ,4>::const_node n, set<string> conjunto, string &cadena) const;
  
   /** @brief Functor para convertir un string en un pair<char,int>
    * se utiliza en loadSerialized
