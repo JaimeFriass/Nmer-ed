@@ -18,6 +18,13 @@ using namespace std;
 //template<typename T, int K>
 //extern void recorrido_preorden(typename ktree<T,K>::const_node n);
 
+class OrdenCre {
+public:
+    bool operator() ( pair<string,int> par1, pair<string,int> par2) const {
+		  return par1.second < par2.second;
+    }
+};
+
 
 Nmer::Nmer() {
   max_long = 0;
@@ -87,7 +94,6 @@ void Nmer::sequenceADN(unsigned int tama, const string & adn ) {
 }
 
 void Nmer::insertar_cadena(const string cadena) {
-	/*
 	typename ktree<pair<char,int>,4>::node n_act = el_Nmer.root();
 	int indice;
 	pair<char,int> par;
@@ -107,7 +113,6 @@ void Nmer::insertar_cadena(const string cadena) {
 		}
 		n_act = n_act.k_child(indice);
 	}
-	*/
 }
 
 
@@ -138,6 +143,7 @@ set <pair <string,int>, OrdenCre > rareNmer (int threshold) {
 // | 			Métodos auxiliares			 |
 // -------------------------------------------
 
+
 int Nmer::altura_nodo(typename ktree<pair<char,int> ,4>::const_node n) const{
 	int hmax=-1;
 	if (!n.null()){
@@ -164,7 +170,7 @@ unsigned int Nmer::indice_nodo(const char car) {
 		return 50;
 }
 void Nmer::recorrer_niveles() const {
-	/*typename ktree< pair <char,int>, 4>::const_node n = el_Nmer.root();
+	typename ktree< pair <char,int>, 4>::const_node n = el_Nmer.root();
 	typename ktree< pair <char,int>, 4>::const_node aux;
 	queue<typename ktree<pair<char,int> ,4>::const_node > cola;
 
@@ -174,13 +180,11 @@ void Nmer::recorrer_niveles() const {
   	while (!cola.empty()){
  		aux = cola.front();
     	cola.pop();
-    	for (int i = 0; i < altura_nodo)
 		cout << "(" <<  (*aux).first  << " - " << (*aux).second <<"); ";
     	for (auto hijo : aux)
       		cola.push(hijo);
   }
   cout << endl;
-  */
 }
 
 set<string> Nmer::listar(ktree<pair<char,int> ,4>::const_node n, set<string> conjunto, string &cadena) const {
@@ -188,7 +192,7 @@ set<string> Nmer::listar(ktree<pair<char,int> ,4>::const_node n, set<string> con
 	if (!n.null()){
 		if ( (*n).second != 0 ) {
 		 	int altura = 5 - altura_nodo(n);
-		 	cout << GREEN << "[ALTURA]" << " Altura nodo actual: " << altura << WHITE <<  endl; º
+		 	cout << GREEN << "[ALTURA]" << " Altura nodo actual: " << altura << WHITE <<  endl;
 		  	cadena[altura - 1] = (*n).first;
 		  	conjunto.insert(cadena);
 		} else {
@@ -208,27 +212,52 @@ set<string> Nmer::listar(ktree<pair<char,int> ,4>::const_node n, set<string> con
 	}
 }
 
-set< pair<string,int> , OrdenCre > Nmer::level(int l) {
-	set<pair<string,int>, OrdenCre> resultado;
+set< pair<string,int> /* , OrdenCre */> Nmer::level(int l) {
+	set<pair<string,int>/* , OrdenCre */> resultado;
 	string cadena = "";
-	if (l<0) {
-		for (int i = 0>; i < 4; i++)
-			if (!el_Nmer.root()[i].null() )
-				recorreLevel(&resultado, el_Nmer.root()[i], cadena, l - 1);
+	if (l > 0) {
+		cout << "Entra comprobacion" << endl;
+		for (int i = 0; i < 4; i++)
+			if ( !el_Nmer.root()[i].null() ) { // Si la raiz del hijo no es nula
+				cout << GREEN << "[LEVEL] Se recorre el nivel " << l - 1 << "." << WHITE << endl;
+				recorrer_level(l - 1, resultado, el_Nmer.root()[i], cadena);
+			} else { cout << " KK " << endl;}
 	}
 
 	return resultado;
 }
 
-void Nmer::recorreLevel(set>pair<string,int>,OrdenCre> *conjunto, typename ktree<pair<char,int>,4>::const_node n, const string &cadena, int l) {
-	string actual = cadena + (*n).fist;
+void Nmer::recorrer_level(int level, set<pair<string,int>/*, OrdenCre*/> &conjunto, typename ktree<pair<char,int>,4>::const_node n, const string &cadena) {
+	string actual = cadena + (*n).first;
+	cout << MAGENTA << "[RECORRER LEVEL " << level << "] Cadena actual: " << actual << endl;
+	pair <string,int> par;
+	par.first = actual;
+	par.second = 1;
+	// Busca en el conjunto pares con nombre igual a la cadena actual
+	auto it = find_if(conjunto.begin(), conjunto.end(), [&](const pair <string,int>&val) -> bool {
+		cout << "VAL.FIRST = " << val.first << endl;
+		return val.first == actual;
+	});
+	if (it == conjunto.end() )
+		par.second = 1;
+	else {
+		par.second = it->second;
+		cout << "POLLAAAAAAAAAAAAAAAAAAAAA";
+	}
 
-	if (l = 0)
-		(*conjunto).insert( pair<string,int> (actual, (*n).second) );
-	else
-		for (int i = 0; i < 4; i++)
-			if (!n[i].null() )
-				recorreLevel(ptr_set, n[i], actual, i - 1);
+	/*if ( conjunto.find(par) == conjunto.end() )
+		par.second = 1;
+	else {
+		par.second = par.second + 1;
+		cout << "KKK"
+	}
+	*/
+	conjunto.insert( par );
+	for (int i = 0; i < 4; i++)
+		if ( !n[i].null() ) {
+			cout << CYAN << "[RECORRER LEVEL " << level << "] Se recorre " << i << endl;
+			recorrer_level(level - 1, conjunto, n[i], actual);
+		}
 }
 
  

@@ -10,11 +10,13 @@
 #define __NMER_H
 #include <string>
 #include <set>
+#include <algorithm>
 using namespace std;
 #include "ktree.h"
 
 //template <typename T, int K>
 //extern void recorrido_preorden(typename ktree<T,K>::const_node n);
+class OrdenCre;
 
 
 class Nmer {
@@ -70,6 +72,10 @@ public:
    // set <pair <string,int>, vector<pair <string,int> >,  OrdenCre > rareNmer (int threshold);
 
    void recorrer_niveles() const;
+
+   set< pair<string,int>/* , OrdenCre */ > level(int l);
+
+   void recorrer_level(int level, set<pair<string,int>/* , OrdenCre */> &conjunto, typename ktree<pair<char,int>,4>::const_node n, const string &cadena);
   
 private:
   ktree<pair<char,int>,4> el_Nmer; // subsecuencias 
@@ -101,13 +107,6 @@ private:
        string salida = string(1,x.first) + " " +std::to_string(x.second); 
        return salida;
      }
-  };
-
-  class OrdenCre {
-    public:
-    bool operator() ( pair<char,int> par1, pair<char,int> par2) const {
-		return par1.second < par2.second;
-    }
   };
 };
 
