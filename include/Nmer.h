@@ -14,9 +14,8 @@
 using namespace std;
 #include "ktree.h"
 
-//template <typename T, int K>
-//extern void recorrido_preorden(typename ktree<T,K>::const_node n);
 class OrdenCre;
+class OrdenDecre;
 
 
 class Nmer {
@@ -36,19 +35,16 @@ public:
    * La cadena original viene descrita en el fichero serializado
    */ 
   bool loadSerialized(const string & nombre_fichero);
-  
-  
   /** @brief Imprime los Nmers
    * @todo Debemos de implementar este método de forma que nos garantizemos que se imprimen todos los Nmers.
    */ 
    void list_Nmer() const;
-   
-   
   /** @brief Máxima longitud de los Nmers almacenados
    */ 
    unsigned int length()const;
-   
-     
+     /** @brief Devuelve el_Nmer.root()
+   */ 
+   ktree< pair<char,int>,4>::const_node root() const;
   /** @brief Número de Nmers almacenados
    */ 
    size_type size() const;
@@ -67,23 +63,55 @@ public:
    *
    * Devuelve el conjunto de subcadenas (no prefijo) que aparecen un número de veces menor o igual
    * a threshold veces en el Nmer.
-   *
    */ 
-   // set <pair <string,int>, vector<pair <string,int> >,  OrdenCre > rareNmer (int threshold);
-
    void recorrer_niveles() const;
-
+  /** @brief Devuelve únicamente los Nmers de longitud ñ
+   * @param l longitud
+   */ 
    set< pair<string,int>/* , OrdenCre */ > level(int l);
-
-   void recorrer_level(int level, set<pair<string,int>/* , OrdenCre */> &conjunto, typename ktree<pair<char,int>,4>::const_node n, const string &cadena);
-  
+  /** @brief Devuelve el Nmer asociado a un prefijo.
+   * @param cadena string a buscar de prefijo
+   */ 
+   Nmer Prefix(string cadena);
+   bool comparison(typename ktree< pair<char,int>,4>::const_node n1, typename ktree< pair<char,int>,4>::const_node n2) const;
+  /** @brief Devuelve si la cadena esta contenida en alguna del Nmer.
+   * @param adn string a buscar en el Nmer
+   */ 
+   bool containsString (const string adn);
+  /** @brief Devuelve true si cada nodo de *this está también
+   * representado en reference.
+   * @param reference Nmer donde comparar nodos
+   */ 
+   bool included(const Nmer reference) const;
+  /** @brief Devuelve la lista de todas las subcadenas que aparecen
+   * menos de threshold veces en el Nmer ordenadas crecientemente.
+   * @param threshold numero de veces
+   */ 
+   set <pair <string,int>/*, OrdenCre*/ > rareNmer (int threshold);
+  /** @brief Devuelve la lista de las cadenas de longitud mayor posible
+   * que aparecen más de threshold veces en el Nmer, en orden decreciente.
+   * @param threshold numero de veces
+   */ 
+   set <pair <string,int>/*, OrdenCre*/ > commonNmer (int threshold);
+  /** @brief Se devuelve un Nmer donde para cada nodo se computa la suma de
+   * las frecuencias en *this y en referencia.
+   * @param reference Nmer a comparar
+   */ 
+   // Nmer Union(const Nmer reference);
+   
+   
 private:
   ktree<pair<char,int>,4> el_Nmer; // subsecuencias 
   unsigned int max_long; // Mayor longitud de la cadena representada, esto es, el nivel máximo del árbol
-
-  void insertar_cadena(string cadena);
+  void insertar_cadena(string cadena); 
   unsigned int indice_nodo(const char car);
   set<string> listar(ktree<pair<char,int> ,4>::const_node n, set<string> conjunto, string &cadena) const;
+  void recorrer_level(int level, set<pair<string,int>/* , OrdenCre */> &conjunto, typename ktree<pair<char,int>,4>::const_node n, const string &cadena);
+  void leer_rare (set <pair<string,int>/*, OrdenCre*/> &conjunto, typename ktree<pair<char,int>,4>::const_node n, string &cadena, int threshold);
+  void leer_common(set < pair<string,int> /*, OrdenCre*/> &conjunto, typename ktree<pair<char,int>,4>::const_node n, string &cadena, int threshold);
+  void recorre_prefix(set<string> &conjunto, typename ktree<pair<char,int>,4>::const_node n, string adn);
+ // void union_aux(typename ktree<pair<char,int>,4>::node nodo1, typename ktree<pair<char,int>,4>::const_node nodo2);
+  
  
   /** @brief Functor para convertir un string en un pair<char,int>
    * se utiliza en loadSerialized
